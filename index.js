@@ -1,5 +1,5 @@
 /* jslint node: true */
-(function (glob) {
+(function (context) {
 
     function skipKey(key) {
         var keys = {
@@ -78,13 +78,13 @@
         return extend(null, proto);
     }
 
-    glob.aKlass = {
+    context.aKlass = {
         klass: klass,
         extend: extend
     };
 
-    if (typeof exports !== 'undefined') {
-        exports.aKlass = glob.aKlass;
+    if (typeof module === 'object' && module.exports) {
+        exports.aKlass = context.aKlass;
     }
 
 }(this));
