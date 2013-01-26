@@ -1,7 +1,7 @@
 /*jslint node: true */
-var testConstruction = false,
+var testConstruction = true,
     testUsage = true,
-    testCompleteRun = false;
+    testCompleteRun = true;
 
 function getJSClasses() {
     var classes, http, fs, count;
@@ -44,13 +44,15 @@ function getJSClasses() {
 getJSClasses();
 
 function runTests() {
-    var aKlass, jsface, Benchmark,
+    var aKlass, aKlassp, jsface, Benchmark,
         JSFacePerson, JSFaceFrenchGuy, JSFaceParisLover,
         AklassPerson, AklassFrenchGuy, AklassParisLover,
+        AklasspPerson, AklasspFrenchGuy, AklasspParisLover,
         suiteConstruction, suite, suiteUsage,
-        jsfaceLover, aklassLover;
+        jsfaceLover, aklassLover, aklasspLover;
 
     aKlass = require(__dirname + '/../index').aKlass;
+    aKlassp = require(__dirname + '/../aklass-parent').aKlassp;
     jsface = require(__dirname + '/./jsface');
     Benchmark = require('benchmark');
 
@@ -115,6 +117,42 @@ function runTests() {
         }
     });
 
+    AklasspPerson = aKlassp.klass({
+        initialize: function (name) {
+            this.name = name;
+        },
+
+        setAddress: function (country, city, street) {
+            this.country = country;
+            this.city = city;
+            this.street = street;
+        }
+    });
+
+    AklasspFrenchGuy = aKlassp.extend(AklasspPerson, {
+        initialize: function (name) {
+            // AklasspFrenchGuy.$super.call(this, name);
+            this.parent(name);
+        },
+
+        setAddress: function (city, street) {
+            // AklasspFrenchGuy.$superp.setAddress.call(this, 'France', city, street);
+            this.parent('France', city, street);
+        }
+    });
+
+    AklasspParisLover = aKlassp.extend(AklasspFrenchGuy, {
+        initialize: function (name) {
+            // AklasspParisLover.$super.call(this, name);
+            this.parent(name);
+        },
+
+        setAddress: function (street) {
+            // AklasspParisLover.$superp.setAddress.call(this, 'Paris', street);
+            this.parent('Paris', street);
+        }
+    });
+
     if (testConstruction) {
         suiteConstruction = new Benchmark.Suite();
         suiteConstruction
@@ -124,7 +162,9 @@ function runTests() {
             .add('aKlass construction test', function () {
                 var ob = new AklassParisLover("Mary");
             })
-            // add listeners
+            .add('aKlassp construction test', function () {
+                var ob = new AklasspParisLover("Mary");
+            })
             .on('cycle', function (event) {
                 console.log(String(event.target));
             })
@@ -138,12 +178,16 @@ function runTests() {
         suiteUsage = new Benchmark.Suite();
         jsfaceLover = new JSFaceParisLover("Mary");
         aklassLover = new AklassParisLover("Mary");
+        aklasspLover = new AklasspParisLover("Mary");
         suiteUsage
             .add('JS Face use method test', function () {
                 jsfaceLover.setAddress("CH");
             })
             .add('aKlass use method test', function () {
                 aklassLover.setAddress("CH");
+            })
+            .add('aKlassp use method test', function () {
+                aklasspLover.setAddress("CH");
             })
             .on('cycle', function (event) {
                 console.log(String(event.target));
@@ -159,15 +203,18 @@ function runTests() {
     if (testCompleteRun) {
         suite = new Benchmark.Suite();
         suite
-            .add('aKlass test', function () {
-                var ob = new AklassParisLover("Mary");
-                ob.setAddress("CH");
-            })
             .add('JS Face test', function () {
                 var ob = new JSFaceParisLover("Mary");
                 ob.setAddress("CH");
             })
-            // add listeners
+            .add('aKlass test', function () {
+                var ob = new AklassParisLover("Mary");
+                ob.setAddress("CH");
+            })
+            .add('aKlassp test', function () {
+                var ob = new AklasspParisLover("Mary");
+                ob.setAddress("CH");
+            })
             .on('cycle', function (event) {
                 console.log(String(event.target));
             })
