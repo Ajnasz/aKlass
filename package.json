@@ -1,0 +1,31 @@
+{
+  "name": "aklass",
+  "version": "0.0.1",
+  "description": "A small utility to simulate inheritance in javascript.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "benchmark": "~1.0.0"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Ajnasz/aKlass.git"
+  },
+  "keywords": [
+    "inheritance",
+    "klass",
+    "class",
+    "extend",
+    "static",
+    "mixin"
+  ],
+  "author": "Lajos Koszti",
+  "license": "MIT",
+  "readmeFilename": "README",
+  "gitHead": "b88f3bf8ac256b1f0e084e3b71e2419a82321bc2"
+}
