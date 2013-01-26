@@ -1,0 +1,64 @@
+aKlass
+
+A small utility to simulate inheritance in javascript.
+
+Creating a class
+
+var aKlass = require('aklass');
+
+var Foo = aKlass.klass({
+    foo: null,
+    initialize: function () {
+        ...
+    },
+    setFoo: function (foo) {
+        this.foo = foo;
+    }
+});
+
+var foo = new Foo();
+foo.setFoo(1);
+console.log(foo.foo); // logs 1
+
+Inheritance
+
+var Bar = aKlass.extend(Foo, {
+    initialize: function () {
+        Bar.$super.call(this);
+    },
+    setFoo: function (foo) {
+        foo = foo * 2;
+        Bar.$superp.call(this ,foo);
+    }
+});
+
+var bar = new Bar();
+bar.setFoo(1);
+console.log(bar.foo); // logs 2
+
+Static variables
+
+var Baz = aKlass.klass({
+    statics: {
+        FOO: 1,
+        BAR: 2
+    }
+});
+
+console.log(Baz.FOO); // logs 1
+
+Mixins
+
+var mix = {
+    a: 1,
+    b: 2
+};
+
+var Baz = aKlass.klass({
+    mixins: [mix],
+    initialize: function () {
+        console.log(this.a);
+    }
+});
+
+var baz = new Baz(); // logs 1
