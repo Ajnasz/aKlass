@@ -2,6 +2,7 @@
 var testConstruction = false,
     testUsage = true,
     testCompleteRun = false;
+
 function getJSClasses() {
     var classes, http, fs, count;
     classes = [
@@ -17,7 +18,7 @@ function getJSClasses() {
     count = 0;
 
     classes.forEach(function (cl) {
-        var file = fs.createWriteStream(cl.name + '.js');
+        var file = fs.createWriteStream(__dirname + '/' + cl.name + '.js');
 
         file.on('close', function () {
             count += 1;
@@ -26,7 +27,7 @@ function getJSClasses() {
                 runTests();
 
                 classes.forEach(function (cl) {
-                    fs.unlink(cl.name + '.js');
+                    fs.unlink(__dirname + '/' + cl.name + '.js');
                 });
             }
         });
@@ -49,8 +50,8 @@ function runTests() {
         suiteConstruction, suite, suiteUsage,
         jsfaceLover, aklassLover;
 
-    aKlass = require('../index').aKlass;
-    jsface = require('./jsface');
+    aKlass = require(__dirname + '/../index').aKlass;
+    jsface = require(__dirname + '/./jsface');
     Benchmark = require('benchmark');
 
     JSFacePerson = jsface.Class({
