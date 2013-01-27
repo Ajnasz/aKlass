@@ -40,8 +40,10 @@
 
     function extend(parent, proto) {
         var Class, Parent, key, mixin, index, mixinLength, constructor;
+        constructor = proto.initialize || function () {};
 
-        Class = proto.initialize || function () {};
+        Class = constructor;
+        Class.prototype.constructor = constructor;
 
         if (parent) {
 
@@ -56,7 +58,6 @@
             // instanciate a inherited class.
             Class.$super = parent;
             Class.$superp = parent.prototype;
-
         }
 
         if (proto.mixins) {

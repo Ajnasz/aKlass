@@ -40,12 +40,14 @@
 
     function extend(parent, proto) {
         var Class, Parent, key, mixin, index, mixinLength, constructor, i;
-
-        Class = function () {
+        constructor = function () {
             if (this.initialize) {
                 this.initialize();
             }
         };
+
+        Class = constructor;
+        Class.prototype.constructor = constructor;
 
         if (parent) {
 
