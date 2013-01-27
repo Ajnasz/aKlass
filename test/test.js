@@ -9,12 +9,10 @@ var mix = {
     jjj: 1
 };
 var Foo = klass({
+    name: null,
     initialize: function () {
-        this.a();
     },
-    a: function () {
-    },
-    c: function (name) {
+    setName: function (name) {
         this.name = name;
         return name;
     }
@@ -29,12 +27,9 @@ var Bar = extend(Foo, {
     },
     initialize: function () {
         Bar.$super.call(this);
-        this.b();
     },
-    b: function () {
-    },
-    c: function (name) {
-        return Bar.$superp.c.call(this, name);
+    setName: function (name) {
+        return Bar.$superp.setName.call(this, name);
     }
 });
 
@@ -42,8 +37,8 @@ var Baz = extend(Bar, {
     initialize: function () {
         Baz.$super.call(this);
     },
-    c: function (name) {
-        return Baz.$superp.c.call(this, name);
+    setName: function (name) {
+        return Baz.$superp.setName.call(this, name);
     }
 });
 
@@ -51,27 +46,51 @@ var foo = new Foo();
 var bar = new Bar();
 var baz = new Baz();
 
-// Test if a function fo Foo instance is the same as Foo.prototype.a
-assert.deepEqual(foo.a, Foo.prototype.a);
+console.log('Test if name property inherited');
+assert.deepEqual(Foo.prototype.name, null);
+assert.deepEqual(Bar.prototype.name, null);
+assert.deepEqual(Baz.prototype.name, null);
 
-// test if Bar inherited the function from A
-assert.deepEqual(bar.a, foo.a);
+console.log('Test if the setName function of Foo instance is the same as Foo.prototype.setName');
+assert.deepEqual(foo.setName, Foo.prototype.setName);
 
-// test parent call
-assert.equal(bar.c(1), 1);
+console.log('test if prototype prop not changed');
+foo.setName(1);
+assert.deepEqual(Foo.prototype.name, null);
+
+console.log('test parent call');
+assert.equal(bar.setName(1), 1);
 assert.equal(bar.name, 1);
 
-// test parent call
-assert.equal(baz.c(2), 2);
-assert.equal(bar.c(2), 2);
+console.log('Test if prototype is still not changed');
+assert.deepEqual(Foo.prototype.name, null);
+assert.deepEqual(Bar.prototype.name, null);
 
-// test mixin
+console.log('test parent call');
+assert.equal(baz.setName(2), 2);
+console.log('Test if prototype is still not changed');
+assert.deepEqual(Foo.prototype.name, null);
+assert.deepEqual(Bar.prototype.name, null);
+assert.deepEqual(Baz.prototype.name, null);
+
+console.log('check constructor property');
+assert.deepEqual(foo.constructor, Foo);
+assert.deepEqual(bar.constructor, Bar);
+assert.deepEqual(baz.constructor, Baz);
+
+console.log('test mixin');
 assert.deepEqual(bar.jjj, 1);
 
-// test statics
+console.log('test statics');
 assert.equal(typeof Bar.foo, 'object');
 assert.equal(Bar.foo.a, 1);
 
-// test inherited statics
+console.log('test inherited statics');
 assert.equal(typeof Baz.foo, 'object');
 assert.equal(Baz.foo.a, 1);
+
+console.log('Test instance of');
+
+assert(foo instanceof Foo);
+assert(bar instanceof Bar);
+assert(baz instanceof Baz);
