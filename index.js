@@ -35,30 +35,33 @@
         mix(statics, Class);
     }
 
-    function inherit(parent, proto) {
+    function classExtend(proto) {
+        return extend(this, proto);
     }
 
-    function extend(parent, proto) {
-        var Class, Parent, key, mixin, index, mixinLength, constructor;
+    function extend(Parent, proto) {
+        var Class, key, mixin, index, mixinLength, constructor;
+
         constructor = proto.initialize || function () {};
 
         Class = constructor;
-        Class.prototype.constructor = constructor;
 
-        if (parent) {
-
+        if (Parent) {
             // inherit prototype
-            mix(Class.prototype, parent.prototype);
+            mix(Class.prototype, Parent.prototype);
 
             // mix statics
-            mix(Class, parent);
+            mix(Class, Parent);
 
             // if no both super and superp and want to access to
             // superp.initialize it makes much slower the construction when
             // instanciate a inherited class.
-            Class.$super = parent;
-            Class.$superp = parent.prototype;
+            Class.$super = Parent.prototype.initialize;
+            Class.$superp = Parent.prototype;
         }
+
+        Class.prototype.constructor = Class;
+        Class.extend = classExtend;
 
         if (proto.mixins) {
             addMixins(Class, proto.mixins);

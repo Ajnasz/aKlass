@@ -35,7 +35,9 @@
         mix(statics, Class);
     }
 
-    function inherit(parent, proto) {
+
+    function classExtend(proto) {
+        return extend(this, proto);
     }
 
     function extend(parent, proto) {
@@ -48,6 +50,7 @@
 
         Class = constructor;
         Class.prototype.constructor = constructor;
+        Class.extend = classExtend;
 
         if (parent) {
 
@@ -60,7 +63,6 @@
             // if no both super and superp and want to access to
             // superp.initialize it makes much slower the construction when
             // instanciate a inherited class.
-            Class.$super = parent;
             Class.$superp = parent.prototype;
         }
 
