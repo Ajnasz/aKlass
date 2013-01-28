@@ -102,11 +102,17 @@ assert.equal(Baz.foo.a, 1);
 
 console.log('Test instance of');
 
+// test if foo is instance of Foo
 assert(foo instanceof Foo);
+// test if bar is instance of Bar
 assert(bar instanceof Bar);
+// test if baz is instance of Baz
 assert(baz instanceof Baz);
+
+// Test if bar is instance of it's parent
 assert(bar instanceof Foo);
+
+// Test if bar is instance of it's parents
 assert(baz instanceof Foo);
 assert(baz instanceof Bar);
 console.log('tests finished\n');
-
