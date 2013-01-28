@@ -94,3 +94,4 @@ console.log('Test instance of');
 assert(foo instanceof Foo);
 assert(bar instanceof Bar);
 assert(baz instanceof Baz);
+console.log('Test finsihed\n');

@@ -10,7 +10,7 @@
     "benchmark": "~1.0.0"
   },
   "scripts": {
-    "test": "node test/test.js && node test/test-parent.js"
+    "test": "node test/test.js && node test/test-parent.js && node test/test-proto-chain.js"
   },
   "repository": {
     "type": "git",

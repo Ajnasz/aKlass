@@ -1,5 +1,5 @@
 /*jslint node: true */
-var aKlass = require('../index').aKlass;
+var aKlass = require('../aklass-proto-chain').aKlass;
 var klass = aKlass.klass;
 var extend = aKlass.extend;
 var assert = require('assert');
@@ -109,12 +109,10 @@ assert(bar instanceof Bar);
 // test if baz is instance of Baz
 assert(baz instanceof Baz);
 
-/*
 // Test if bar is instance of it's parent
 assert(bar instanceof Foo);
 
 // Test if bar is instance of it's parents
 assert(baz instanceof Foo);
 assert(baz instanceof Bar);
-*/
 console.log('tests finished\n');
