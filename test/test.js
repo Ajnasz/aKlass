@@ -10,7 +10,8 @@ var mix = {
 };
 var Foo = klass({
     name: null,
-    initialize: function () {
+    initialize: function (lorem) {
+        this.lorem = lorem || 0;
     },
     setName: function (name) {
         this.name = name;
@@ -18,33 +19,42 @@ var Foo = klass({
     }
 });
 
-var Bar = extend(Foo, {
+var Bar = Foo.extend({
     mixins: [mix],
     statics: {
         foo: {
             a: 1
         }
     },
-    initialize: function () {
-        Bar.$super.call(this);
+    initialize: function (lorem) {
+        Bar.$super.call(this, lorem);
     },
     setName: function (name) {
         return Bar.$superp.setName.call(this, name);
     }
 });
 
-var Baz = extend(Bar, {
-    initialize: function () {
-        Baz.$super.call(this);
+assert.equal(typeof Bar.prototype.lorem, 'undefined');
+
+var Baz = Bar.extend({
+    initialize: function (lorem) {
+        Baz.$super.call(this, lorem);
     },
     setName: function (name) {
         return Baz.$superp.setName.call(this, name);
     }
 });
 
-var foo = new Foo();
-var bar = new Bar();
-var baz = new Baz();
+assert.equal(typeof Baz.prototype.lorem, 'undefined');
+
+var foo = new Foo(1);
+
+var bar = new Bar(2);
+var baz = new Baz(3);
+
+assert.deepEqual(foo.lorem, 1);
+assert.deepEqual(bar.lorem, 2);
+assert.deepEqual(baz.lorem, 3);
 
 console.log('Test if name property inherited');
 assert.deepEqual(Foo.prototype.name, null);
@@ -68,6 +78,7 @@ assert.deepEqual(Bar.prototype.name, null);
 
 console.log('test parent call');
 assert.equal(baz.setName(2), 2);
+
 console.log('Test if prototype is still not changed');
 assert.deepEqual(Foo.prototype.name, null);
 assert.deepEqual(Bar.prototype.name, null);
@@ -94,3 +105,8 @@ console.log('Test instance of');
 assert(foo instanceof Foo);
 assert(bar instanceof Bar);
 assert(baz instanceof Baz);
+assert(bar instanceof Foo);
+assert(baz instanceof Foo);
+assert(baz instanceof Bar);
+console.log('tests finished\n');
+

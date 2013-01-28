@@ -18,7 +18,7 @@ var Foo = klass({
     }
 });
 
-var Bar = extend(Foo, {
+var Bar = Foo.extend({
     mixins: [mix],
     statics: {
         foo: {
@@ -33,7 +33,7 @@ var Bar = extend(Foo, {
     }
 });
 
-var Baz = extend(Bar, {
+var Baz = Bar.extend({
     initialize: function () {
         this.parent();
     },
