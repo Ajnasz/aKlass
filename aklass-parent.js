@@ -104,7 +104,7 @@
         return extend(null, proto);
     }
 
-    context.aKlassp = {
+    context.aKlass = {
         klass: klass,
         extend: extend
     };

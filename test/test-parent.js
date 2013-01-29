@@ -1,5 +1,5 @@
 /*jslint node: true */
-var aKlass = require('../aklass-parent').aKlassp;
+var aKlass = require('../aklass-parent').aKlass;
 var klass = aKlass.klass;
 var extend = aKlass.extend;
 var assert = require('assert');
