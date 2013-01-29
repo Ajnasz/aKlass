@@ -93,11 +93,11 @@ console.log('test mixin');
 assert.deepEqual(bar.jjj, 1);
 
 console.log('test statics');
-assert.equal(typeof Bar.foo, 'object');
+assert.equal(typeof Bar.foo, 'object', 'foo static not inhertied into Bar');
 assert.equal(Bar.foo.a, 1);
 
 console.log('test inherited statics');
-assert.equal(typeof Baz.foo, 'object');
+assert.equal(typeof Baz.foo, 'object', 'foo static not inhertied into Baz');
 assert.equal(Baz.foo.a, 1);
 
 console.log('Test instance of');
@@ -109,12 +109,10 @@ assert(bar instanceof Bar);
 // test if baz is instance of Baz
 assert(baz instanceof Baz);
 
-/*
 // Test if bar is instance of it's parent
 assert(bar instanceof Foo);
 
 // Test if bar is instance of it's parents
 assert(baz instanceof Foo);
 assert(baz instanceof Bar);
-*/
 console.log('tests finished\n');
