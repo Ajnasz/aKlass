@@ -1,19 +1,16 @@
 /* jslint node: true */
 (function (context) {
-
-    function skipKey(key) {
-        var keys = {
-            '$superb': 1,
-            '$super': 1
-        };
-        return !keys.hasOwnProperty(key);
-    }
+    var keys = {
+        '$superb': 1,
+        '$super': 1,
+        'constructor': 1
+    };
 
     function mix(parent, mixin) {
         var prop;
 
         for (prop in mixin) {
-            if (mixin.hasOwnProperty(prop) && skipKey(prop)) {
+            if (mixin.hasOwnProperty(prop) && !keys.hasOwnProperty(prop)) {
                 parent[prop] = mixin[prop];
             }
         }
@@ -31,40 +28,97 @@
         }
     }
 
-    function addStatics(statics, Class) {
-        mix(statics, Class);
+    function addStatics(Class, statics) {
+        mix(Class, statics);
     }
 
-
-    function classExtend(proto) {
-        return extend(this, proto);
+    /**
+     * Function that does exactly the same as the mout counterpart,
+     * but is faster in firefox due to a bug:
+     * https://bugzilla.mozilla.org/show_bug.cgi?id=816439
+     * @method inheritPrototype
+     * @private
+     * @param {Function} A Function which inherits the protoype of B
+     * @param {Function} B Functions which's prototype will be inherited by A
+     */
+    function inheritPrototype(A, B) {
+        var F = function () {};
+        F.prototype = B.prototype;
+        A.prototype = new F();
+        A.prototype.constructor = A;
     }
 
-    function extend(parent, proto) {
-        var Class, Parent, key, mixin, index, mixinLength, constructor, i;
+    function extend(Proto) {
+        var Parent, Class, parentProto, classProto, key, mixin, index, mixinLength, constructor, i;
+
+        Parent = this;
+
         constructor = function () {
             if (this.initialize) {
-                this.initialize();
+                this.initialize.apply(this, arguments);
             }
         };
 
         Class = constructor;
-        Class.prototype.constructor = constructor;
-        Class.extend = classExtend;
 
-        if (parent) {
+        inheritPrototype(Class, Parent);
 
-            // inherit prototype
-            mix(Class.prototype, parent.prototype);
+        addStatics(Class, Parent);
 
-            // mix statics
-            mix(Class, parent);
-
-            // if no both super and superp and want to access to
-            // superp.initialize it makes much slower the construction when
-            // instanciate a inherited class.
-            Class.$superp = parent.prototype;
+        if (Proto.mixins) {
+            addMixins(Class, Proto.mixins);
+            delete Proto.mixins;
         }
+
+        if (Proto.statics) {
+            addStatics(Class, Proto.statics);
+            delete Proto.statics;
+        }
+
+        classProto = Class.prototype;
+        parentProto = Parent.prototype;
+
+        function getInheritedFunction(parent, i) {
+            return function () {
+                this.parent = Class.$superp[i];
+                return Proto[i].apply(this, arguments);
+            };
+        }
+
+        // mix(classProto, Proto);
+        for (i in Proto) {
+            if (Proto.hasOwnProperty(i)) {
+                if (typeof parentProto[i] === 'function') {
+                    classProto[i] = getInheritedFunction(Parent, i);
+                } else {
+                    classProto[i] = Proto[i];
+                }
+            }
+        }
+
+        // if no both super and superp and want to access to
+        // superp.initialize it makes much slower the construction when
+        // instanciate a inherited class.
+        Class.$super = parentProto.initialize;
+        Class.$superp = parentProto;
+
+        classProto.constructor = Class;
+        Class.extend = extend;
+
+        return Class;
+    }
+
+    function klass(proto) {
+        var constructor, Class;
+        constructor = function () {
+            if (this.initialize) {
+                this.initialize.apply(this, arguments);
+            }
+        };
+        Class = constructor;
+        Class.prototype = proto;
+        Class.prototype.constructor = constructor;
+        Class.extend = extend;
 
         if (proto.mixins) {
             addMixins(Class, proto.mixins);
@@ -76,32 +130,7 @@
             delete proto.statics;
         }
 
-        function getInheritedFunction(parent, i) {
-            return function () {
-                this.parent = Class.$superp[i];
-                return proto[i].apply(this, arguments);
-            };
-        }
-
-        if (parent) {
-            for (i in proto) {
-                if (proto.hasOwnProperty(i)) {
-                    if (typeof parent.prototype[i] === 'function') {
-                        Class.prototype[i] = getInheritedFunction(parent, i);
-                    } else {
-                        Class.prototype[i] = proto[i];
-                    }
-                }
-            }
-        } else {
-            mix(Class.prototype, proto);
-        }
-
         return Class;
-    }
-
-    function klass(proto) {
-        return extend(null, proto);
     }
 
     context.aKlass = {
