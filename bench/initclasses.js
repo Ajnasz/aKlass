@@ -14,7 +14,7 @@ if (!global.jQuery) {
 aKlass = require(dirname + '/../index').aKlass;
 aKlassp = require(dirname + '/../aklass-parent').aKlass;
 jsface = require(dirname + '/jsface');
-require(dirname + '/jquery.klass-1.0.js');
+require(dirname + '/jqueryClass');
 
 JSFacePerson = jsface.Class({
     constructor: function (name) {
@@ -112,7 +112,6 @@ AklasspParisLover = AklasspFrenchGuy.extend({
         this.parent('Paris', street);
     }
 });
-
 
 JqKlassPerson = global.jQuery.klass({
     initialize: function (name) {

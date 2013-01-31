@@ -14,8 +14,9 @@ Benchmark = require('benchmark');
 aKlass = require(dirname + '/../index').aKlass;
 aKlassp = require(dirname + '/../aklass-parent').aKlass;
 jsface = require(dirname + '/jsface');
-require(dirname + '/jquery.klass-1.0.js');
+require(dirname + '/jqueryClass.js');
 
+require(dirname + '/initclasses.js');
 
 suiteUsage = new Benchmark.Suite();
 jsfaceLover = new JSFaceParisLover("Mary");

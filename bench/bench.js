@@ -1,41 +1,61 @@
 /*jslint node: true, nomen: true */
-var testClassCreation = false,
-    testConstruction = false,
-    testUsage = false,
-    testCompleteRun = false,
+var testClassCreation = true,
+    testConstruction = true,
+    testUsage = true,
+    testCompleteRun = true,
     testExtending = true;
 
+var spawn = require('child_process').spawn;
 function runTests() {
     "use strict";
-    var aKlass, aKlassp, jsface, Benchmark,
-        dirname;
+    var dirname, tests;
 
     dirname = __dirname;
 
-    Benchmark = require('benchmark');
+    tests = [];
 
     if (testClassCreation) {
-        require(dirname + '/classCreate.js');
+        tests.push(dirname + '/classCreate.js');
     }
 
-    require(dirname + '/initclasses.js');
-
     if (testExtending) {
-        require(dirname + '/testExtending');
+        tests.push(dirname + '/testExtending');
     }
 
     if (testConstruction) {
-        require(dirname + '/testConstruction');
+        tests.push(dirname + '/testConstruction');
     }
 
-
     if (testUsage) {
-        require(dirname + '/testUsage');
+        tests.push(dirname + '/testUsage');
     }
 
     if (testCompleteRun) {
-        require(dirname + '/testCompleteRun');
+        tests.push(dirname + '/testCompleteRun');
     }
+
+    function startTest() {
+        if (tests.length > 0) {
+            var test = tests.shift(), nodeProcess, log;
+
+            log = require('util').print;
+
+            nodeProcess = spawn('node', [test]);
+            log(test + '\n');
+
+            nodeProcess.stdout.on('data', function (data) {
+                log(data.toString('utf8'));
+            });
+
+            nodeProcess.stderr.on('data', function (data) {
+                log(data.toString('utf8'));
+            });
+
+            nodeProcess.on('exit', startTest);
+        }
+    }
+
+    startTest();
 }
 
 function getJSClasses(callback) {
@@ -81,7 +101,7 @@ function getJSClasses(callback) {
             callback();
 
             classes.forEach(function (cl) {
-                fs.unlink(__dirname + '/' + cl.name + '.js');
+                // fs.unlink(__dirname + '/' + cl.name + '.js');
             });
         }
     }
