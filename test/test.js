@@ -69,15 +69,15 @@ foo.setName(1);
 assert.deepEqual(Foo.prototype.name, null);
 
 console.log('test parent call');
-assert.equal(bar.setName(1), 1);
-assert.equal(bar.name, 1);
+assert.equal(bar.setName(2), 2);
+assert.equal(bar.name, 2);
 
 console.log('Test if prototype is still not changed');
 assert.deepEqual(Foo.prototype.name, null);
 assert.deepEqual(Bar.prototype.name, null);
 
 console.log('test parent call');
-assert.equal(baz.setName(2), 2);
+assert.equal(baz.setName(3), 3);
 
 console.log('Test if prototype is still not changed');
 assert.deepEqual(Foo.prototype.name, null);
@@ -99,6 +99,11 @@ assert.equal(Bar.foo.a, 1);
 console.log('test inherited statics');
 assert.equal(typeof Baz.foo, 'object', 'foo static not inhertied into Baz');
 assert.equal(Baz.foo.a, 1);
+
+console.log('test changing static');
+// Baz.foo.a = 2;
+// assert.equal(Bar.foo.a, 1);
+
 
 console.log('Test instance of');
 
