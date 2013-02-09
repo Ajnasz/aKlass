@@ -22,7 +22,7 @@ console.log(foo.foo); // logs 1
 
 Inheritance
 
-var Bar = aKlass.extend(Foo, {
+var Bar = Foo.extend({
     initialize: function () {
         Bar.$super.call(this);
     },
